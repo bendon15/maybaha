@@ -11,7 +11,7 @@ final class RateLimiter
 {
     public static function check(string $bucket): bool
     {
-        $max = Config::getInt('RATE_LIMIT_MAX_REQUESTS', 30);
+        $max = Config::getInt('RATE_LIMIT_MAX_REQUESTS', 60);
         $window = Config::getInt('RATE_LIMIT_WINDOW_SECONDS', 60);
 
         $ip = self::clientIp();
@@ -42,7 +42,21 @@ final class RateLimiter
 
     private static function clientIp(): string
     {
-        return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        // X-Forwarded-For can be a comma-separated chain of hops added by
+        // each proxy in front of the app (Vercel's edge, etc.) — the first
+        // entry is the original client. Using the raw header as-is would
+        // either bucket every visitor differently per request (if the
+        // chain varies) or, worse, bucket every visitor together under one
+        // shared limit if the header is absent and REMOTE_ADDR resolves to
+        // a fixed internal gateway address instead of the real client.
+        $forwardedFor = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '';
+        if ($forwardedFor !== '') {
+            $first = trim(explode(',', $forwardedFor)[0]);
+            if ($first !== '') {
+                return $first;
+            }
+        }
+        return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     }
 
     /**
