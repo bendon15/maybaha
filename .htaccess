@@ -1,0 +1,14 @@
+# --- Deny direct access to internal folders ---
+# Only /public and /api should ever be reachable by a browser.
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI} ^/(services|config|data|logs)(/|$) [NC]
+RewriteRule ^ - [F,L]
+
+# --- Clean API URLs: /api/route -> /api/route.php ---
+RewriteCond %{REQUEST_URI} ^/api/([a-z-]+)$ [NC]
+RewriteCond %{DOCUMENT_ROOT}/api/%1.php -f
+RewriteRule ^api/([a-z-]+)$ api/$1.php [L]
+
+# --- Everything else falls through to /public ---
+DirectoryIndex public/index.html

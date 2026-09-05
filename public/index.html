@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>Maybaha · Flood-Aware Route Navigator (PH)</title>
+<meta name="description" content="Plan driving routes across the Philippines with transparent, data-backed flood risk assessment." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+<link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Map fills the whole viewport; every panel floats above it -->
+  <div id="map"></div>
+
+  <!-- Top brand bar -->
+  <header class="brand-bar">
+    <div class="brand-mark" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 5 10.5 5 15.5C5 19.09 8.13 22 12 22C15.87 22 19 19.09 19 15.5C19 10.5 12 2 12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="brand-text">
+      <span class="brand-name">Maybaha</span>
+      <span class="brand-sub">Flood-aware route navigator</span>
+    </div>
+    <button id="dataStatusPill" class="data-status-pill" type="button" aria-haspopup="dialog">
+      <span class="dot"></span><span id="dataStatusLabel">Checking data…</span>
+    </button>
+  </header>
+
+  <!-- Search / destination panel -->
+  <section class="panel search-panel" id="searchPanel">
+    <div class="field-row">
+      <div class="field origin-field">
+        <span class="field-dot origin-dot"></span>
+        <input id="originInput" type="text" placeholder="Your location" autocomplete="off" />
+        <button id="useGpsBtn" class="text-btn" type="button" title="Use my current GPS location">GPS</button>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field dest-field">
+        <span class="field-dot dest-dot"></span>
+        <input id="destInput" type="text" placeholder="Where are you headed?" autocomplete="off" />
+      </div>
+    </div>
+    <ul id="suggestions" class="suggestions" hidden></ul>
+    <button id="findRoutesBtn" class="primary-btn" type="button">Find safest route</button>
+  </section>
+
+  <!-- Floating GPS re-center button (mobile-first, also shown desktop) -->
+  <button id="recenterBtn" class="fab" type="button" title="Center on my location" aria-label="Center on my location">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M12 2V5M12 19V22M2 12H5M19 12H22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+
+  <!-- Map legend -->
+  <div class="panel legend-panel" id="legendPanel">
+    <div class="legend-title">Legend</div>
+    <div class="legend-row"><span class="swatch risk-safe"></span>Safe</div>
+    <div class="legend-row"><span class="swatch risk-caution"></span>Caution</div>
+    <div class="legend-row"><span class="swatch risk-high"></span>High risk</div>
+    <div class="legend-row"><span class="swatch risk-avoid"></span>Avoid</div>
+    <div class="legend-row"><span class="swatch zone-swatch"></span>Flood-prone zone</div>
+    <div class="legend-row"><span class="swatch report-swatch"></span>Flood report</div>
+  </div>
+
+  <!-- Route / risk results: sidebar on desktop, bottom sheet on mobile -->
+  <section class="results-panel" id="resultsPanel" hidden>
+    <div class="sheet-handle" id="sheetHandle" aria-hidden="true"></div>
+    <div class="results-header">
+      <div>
+        <div class="results-title" id="resultsTitle">Routes</div>
+        <div class="results-sub" id="resultsSub"></div>
+      </div>
+      <button id="closeResultsBtn" class="icon-btn" type="button" aria-label="Close">✕</button>
+    </div>
+    <div id="routeList" class="route-list"></div>
+    <div id="routeDetail" class="route-detail" hidden></div>
+  </section>
+
+  <!-- Non-blocking toast for errors / status -->
+  <div id="toast" class="toast" hidden role="status"></div>
+
+  <!-- Data status detail dialog -->
+  <div id="dataStatusModal" class="modal-backdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="dataStatusModalTitle">
+      <div class="modal-header">
+        <span id="dataStatusModalTitle">Data sources</span>
+        <button id="closeDataModalBtn" class="icon-btn" type="button" aria-label="Close">✕</button>
+      </div>
+      <div id="dataStatusModalBody" class="modal-body"></div>
+      <p class="disclaimer">
+        Maybaha combines routing, weather and flood data to flag <em>known</em> risks.
+        It cannot see every flooded street in real time. Never treat a route rated
+        SAFE or CAUTION as a guarantee — always use your own judgment, follow local
+        authorities, and check official advisories below during heavy weather.
+      </p>
+      <a class="advisory-link" href="https://www.pagasa.dost.gov.ph/" target="_blank" rel="noopener">
+        PAGASA official weather advisories ↗
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="assets/js/api.js"></script>
+<script src="assets/js/map.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

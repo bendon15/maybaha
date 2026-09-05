@@ -1,0 +1,42 @@
+# syntax=docker/dockerfile:1
+#
+# Builds Maybaha for Vercel's container-function runtime.
+# See README.md "Deploy to Vercel" for the accompanying `vercel.json` /
+# `Caddyfile` and what to set in Vercel's environment variables UI.
+
+FROM composer:2 AS dependencies
+WORKDIR /app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-interaction --no-progress --optimize-autoloader
+
+FROM dunglas/frankenphp:1-php8.3-alpine
+WORKDIR /app
+
+# curl: used by services/HttpClient.php to call OSRM/Nominatim/weather APIs.
+# mbstring: used for safe string-length checks on user input.
+RUN install-php-extensions curl mbstring opcache
+
+COPY Caddyfile /etc/caddy/Caddyfile
+COPY --from=dependencies /app/vendor ./vendor
+COPY composer.json composer.lock ./
+
+# Only what the app needs at runtime — no .git, no .env, no logs/ from
+# the build context (see .dockerignore).
+COPY api ./api
+COPY config ./config
+COPY services ./services
+COPY data ./data
+COPY public ./public
+
+# The image filesystem is not persistent/writable across cold starts on
+# Vercel's container runtime; use /tmp for the small amount of local state
+# this app writes (rate-limit counters, log lines). See README for how to
+# swap these for durable storage if you need logs/counters to survive.
+RUN mkdir -p /tmp/logs /tmp/cache/ratelimit
+ENV LOG_PATH=/tmp/logs/app.log
+ENV RATE_LIMIT_CACHE_DIR=/tmp/cache/ratelimit
+
+ENV PORT=80
+EXPOSE 80
+
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]

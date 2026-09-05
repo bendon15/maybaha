@@ -1,0 +1,103 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "note": "DEMO DATA. These polygons approximate well-known flood-prone areas of Metro Manila for demonstration purposes only. They are hand-drawn approximations, not surveyed hazard maps. Replace with an authoritative hazard layer (e.g. Project NOAH) before relying on this for real decisions."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-marikina-riverside",
+        "name": "Marikina Riverside (near Marikina River)",
+        "risk_level": "high",
+        "typical_trigger": "Sustained heavy rain in the Sierra Madre watershed / Marikina River rising above alert level"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [121.0980, 14.6550],
+          [121.1040, 14.6560],
+          [121.1055, 14.6480],
+          [121.0995, 14.6470],
+          [121.0980, 14.6550]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-espana-manila",
+        "name": "España Boulevard corridor, Manila",
+        "risk_level": "medium",
+        "typical_trigger": "Heavy monsoon rain, poor drainage in low-lying stretch"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [120.9880, 14.6100],
+          [120.9940, 14.6110],
+          [120.9945, 14.6060],
+          [120.9885, 14.6050],
+          [120.9880, 14.6100]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-aurora-cubao-underpass",
+        "name": "Aurora Blvd Underpass, Cubao",
+        "risk_level": "high",
+        "typical_trigger": "Underpass flooding during moderate-to-heavy rain"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [121.0525, 14.6210],
+          [121.0555, 14.6215],
+          [121.0558, 14.6190],
+          [121.0528, 14.6185],
+          [121.0525, 14.6210]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-malabon-camanava",
+        "name": "Malabon (CAMANAVA low-lying area)",
+        "risk_level": "high",
+        "typical_trigger": "High tide combined with heavy rain and poor drainage outfall"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [120.9540, 14.6600],
+          [120.9620, 14.6620],
+          [120.9640, 14.6560],
+          [120.9560, 14.6540],
+          [120.9540, 14.6600]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-quiapo-riverside",
+        "name": "Quiapo / Pasig River edge",
+        "risk_level": "medium",
+        "typical_trigger": "Pasig River level rise combined with heavy rain"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [120.9820, 14.5990],
+          [120.9870, 14.6000],
+          [120.9875, 14.5960],
+          [120.9825, 14.5950],
+          [120.9820, 14.5990]
+        ]]
+      }
+    }
+  ]
+}

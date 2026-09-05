@@ -1,0 +1,37 @@
+{
+  "_note": "DEMO DATA. Synthetic incident reports. 'reported_at' values are rewritten relative to request time by MockFloodProvider so the freshness/staleness UI states can be demonstrated.",
+  "reports": [
+    {
+      "id": "rep-001",
+      "lat": 14.6555,
+      "lon": 121.1010,
+      "severity": "severe",
+      "age_minutes": 8,
+      "description": "Knee-deep floodwater reported along Marikina riverside road."
+    },
+    {
+      "id": "rep-002",
+      "lat": 14.6205,
+      "lon": 121.0540,
+      "severity": "moderate",
+      "age_minutes": 25,
+      "description": "Aurora Blvd underpass partially flooded, single lane passable."
+    },
+    {
+      "id": "rep-003",
+      "lat": 14.6080,
+      "lon": 120.9910,
+      "severity": "minor",
+      "age_minutes": 95,
+      "description": "Ankle-deep water receding along España Blvd."
+    },
+    {
+      "id": "rep-004",
+      "lat": 14.6580,
+      "lon": 120.9590,
+      "severity": "severe",
+      "age_minutes": 14,
+      "description": "Flooding reported near Malabon high-tide outfall area."
+    }
+  ]
+}

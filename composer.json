@@ -1,0 +1,9 @@
+{
+    "name": "maybaha/app",
+    "description": "Maybaha - flood risk route navigator (PH)",
+    "type": "project",
+    "require": {},
+    "config": {
+        "sort-packages": true
+    }
+}
