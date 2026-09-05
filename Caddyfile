@@ -4,23 +4,30 @@
 :{$PORT:80} {
 	encode zstd gzip
 
-	# Belt-and-suspenders: these directories are never meant to be served
-	# directly (only required from PHP), and in fact aren't even copied
-	# into the /app/public tree — but block them explicitly in case that
-	# ever changes.
-	@blocked path /services/* /config/* /data/* /logs/* /.env /composer.*
-	respond @blocked 403
+	# Directives at the top level of a Caddyfile block get reordered by
+	# Caddy's own directive-precedence list, not the order written here —
+	# wrapping in `route` forces these to run in the literal order below,
+	# which matters since the block-list must run before the catch-all
+	# `handle` fallback, not after it.
+	route {
+		# Belt-and-suspenders: these directories are never meant to be served
+		# directly (only required from PHP), and in fact aren't even copied
+		# into the /app/public tree — but block them explicitly in case that
+		# ever changes.
+		@blocked path /services/* /config/* /data/* /logs/* /.env /composer.*
+		respond @blocked 403
 
-	# Clean API URLs: /api/<name> -> /app/api/<name>.php
-	handle_path /api/* {
-		root * /app/api
-		rewrite * {path}.php
-		php_server
-	}
+		# Clean API URLs: /api/<name> -> /app/api/<name>.php
+		handle_path /api/* {
+			root * /app/api
+			rewrite * {path}.php
+			php_server
+		}
 
-	# Everything else: the static frontend (index.html, css, js)
-	handle {
-		root * /app/public
-		php_server
+		# Everything else: the static frontend (index.html, css, js)
+		handle {
+			root * /app/public
+			php_server
+		}
 	}
 }
