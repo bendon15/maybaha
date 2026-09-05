@@ -16,7 +16,7 @@ WORKDIR /app
 # mbstring: used for safe string-length checks on user input.
 RUN install-php-extensions curl mbstring opcache
 
-COPY Caddyfile /etc/caddy/Caddyfile
+COPY Caddyfile /etc/frankenphp/Caddyfile
 COPY --from=dependencies /app/vendor ./vendor
 COPY composer.json composer.lock ./
 
@@ -39,4 +39,4 @@ ENV RATE_LIMIT_CACHE_DIR=/tmp/cache/ratelimit
 ENV PORT=80
 EXPOSE 80
 
-CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
+CMD ["frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile"]
